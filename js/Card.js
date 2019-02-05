@@ -33,3 +33,41 @@ class Card {
 	}
 
 }
+
+class Pile {
+	constructor() {
+		this._cards = []
+	}
+
+	get cards() {
+		return this.cards;
+	}
+
+	shuffle() {
+		let numShuffles = arguments[0] ? arguments[0] : 1;
+		let arr = this._cards
+		let shuffles = [...Array(numShuffles).keys()]
+		shuffles.forEach(shuffle => {
+			console.log('Shuffling', shuffle + 1, shuffle + 1 > 1 ? 'times' : 'time')
+			for (let i = 0; i < arr.length - 2; i++) {
+				let j = Math.floor(Math.random() * (arr.length - i) + i)
+				let swap = arr[i]
+				arr[i] = arr[j]
+				arr[j] = swap
+			}
+		})
+	}
+
+	print() {
+		this._cards.forEach(c => console.log(c.name))
+	}
+
+	draw(fromTop = true) {
+		return fromTop ? this._cards.pop() : this._cards.shift()
+	}
+
+	collect(cards, toBottom = true) {
+		if (toBottom) { cards.forEach(c => this._cards.push(c)) }
+		else { cards.forEach(c => this._cards.unshift(c)) }
+	}
+}
