@@ -43,10 +43,15 @@ class Card {
 class Pile {
 	constructor() {
 		this._cards = []
+		this._length = this._cards.length
 	}
 
 	get cards() {
 		return this._cards;
+	}
+
+	get length() {
+		return this._cards.length;
 	}
 
 	shuffle() {
@@ -111,9 +116,15 @@ class Deck extends Pile {
 	get suits() {
 		return this._suits
 	}
-
 }
 
-const deck = new Deck()
+class Solitaire() {
+	
+}
 
-deck.cards.forEach( c => console.log(c.name));
+
+const deck = new Deck()
+deck.shuffle(3)
+deck.print()
+
+console.log(deck.length)
