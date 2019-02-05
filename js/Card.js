@@ -9,7 +9,7 @@ class Card {
 		this._heirarchy = heirarchy
 		this._suit = suit
 		this._value = value
-		this._code = suit[0].toUpperCase() + heirarchy[0].toUpperCase()
+		this._code = heirarchy[0].toUpperCase() + suit[0].toUpperCase()
 		this._name = `${heirarchy} of ${suit}s`
 	}
 
@@ -43,7 +43,7 @@ class Card {
 class Pile {
 	constructor() {
 		this._cards = []
-		this._length = this._cards.length
+		this.length;
 	}
 
 	get cards() {
@@ -125,14 +125,20 @@ class Solitaire {
 			fndtion[suit] = new Pile()
 			return fndtion
 		}, {})
-		this.field = Array(7).fill(new Pile())
+		this.field = [new Pile(), new Pile(), new Pile(), new Pile(), new Pile(), new Pile(), new Pile() ]
+	}
+
+	deal() {
+		this.field.forEach( (pile, i) => {
+			[...Array(i+1).keys()].forEach( slot => pile.collect([this.deck.draw()]))
+		})
 	}
 
 }
 
 
-const deck = new Deck()
-deck.shuffle(3)
-deck.print()
+const game = new Solitaire()
 
-console.log(deck.length)
+game.deal()
+
+console.log(game.field[6].length)
