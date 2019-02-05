@@ -118,8 +118,16 @@ class Deck extends Pile {
 	}
 }
 
-class Solitaire() {
-	
+class Solitaire {
+	constructor() {
+		this.deck = new Deck()
+		this.foundation = this.deck.suits.reduce( (fndtion, suit) => {
+			fndtion[suit] = new Pile()
+			return fndtion
+		}, {})
+		this.field = Array(7).fill(new Pile())
+	}
+
 }
 
 
