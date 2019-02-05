@@ -1,4 +1,10 @@
 class Card {
+	/**
+	 * 
+	 * @param {string} heirarchy 
+	 * @param {string} suit 
+	 * @param {number} value 
+	 */
 	constructor(heirarchy, suit, value) {
 		this._heirarchy = heirarchy
 		this._suit = suit
@@ -40,7 +46,7 @@ class Pile {
 	}
 
 	get cards() {
-		return this.cards;
+		return this._cards;
 	}
 
 	shuffle() {
@@ -71,3 +77,43 @@ class Pile {
 		else { cards.forEach(c => this._cards.unshift(c)) }
 	}
 }
+
+class Deck extends Pile {
+	/**
+	 * 
+	 * @param {object[]} _cards 
+	 * @param {string[]} suits 
+	 * @param {string[]} royalty 
+	 * @param {number} numPerSuit 
+	 * @param {boolean} aceHigh 
+	 */
+	constructor(_cards,
+							suits = ['Club', 'Diamond', 'Heart', 'Spade'],
+							royalty = ['Jack', 'King', 'Queen', 'Ace'],
+							numPerSuit = 13,
+							aceHigh = true) {
+		super(_cards)
+		this._suits = suits
+		this._cards = (() => {
+			let result = []
+			this.suits.forEach(suit => {
+				let numNumCards = numPerSuit - royalty.length;
+				[...Array(numNumCards).keys()].concat(royalty).forEach((card, i) => {
+					let heir = i > numNumCards - 1 ? card : (card + 2).toString();
+					let value = heir === 'Ace' && !aceHigh ? 1 : i + 2
+					result.push(new Card(heir, suit, value))
+				})
+			})
+			return result
+		})()
+	}
+
+	get suits() {
+		return this._suits
+	}
+
+}
+
+const deck = new Deck()
+
+deck.cards.forEach( c => console.log(c.name));
