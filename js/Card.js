@@ -9,6 +9,7 @@ class Card {
 		this._heirarchy = heirarchy
 		this._suit = suit
 		this._value = value
+		this._faceUp = false
 		this._code = heirarchy[0].toUpperCase() + suit[0].toUpperCase()
 		this._name = `${heirarchy} of ${suit}s`
 	}
@@ -36,6 +37,14 @@ class Card {
 
 	get name() {
 		return this._name
+	}
+
+	get faceUp() {
+		return this._faceUp
+	}
+
+	turn() {
+		this._faceUp = !this._faceUp
 	}
 
 }
@@ -71,6 +80,10 @@ class Pile {
 
 	print() {
 		this._cards.forEach(c => console.log(c.name))
+	}
+
+	peek(index=(this._cards.length - 1)) {
+		return this._cards[index]
 	}
 
 	draw(fromTop = true) {
@@ -129,8 +142,10 @@ class Solitaire {
 	}
 
 	deal() {
+		this.deck.shuffle(6)
 		this.field.forEach( (pile, i) => {
 			[...Array(i+1).keys()].forEach( slot => pile.collect([this.deck.draw()]))
+			pile.cards[pile.length - 1].turn()
 		})
 	}
 
@@ -141,4 +156,7 @@ const game = new Solitaire()
 
 game.deal()
 
-console.log(game.field[6].length)
+console.log(game.field[3])
+console.log(game.field[3].peek())
+console.log(game.field[3].peek(2))
+
