@@ -91,25 +91,25 @@ class Pile {
 	}
 
 	collect(cards, toBottom = true) {
+		// TODO check if cards is arr or Card => branch betweem forEach and push/unshift
+		cards = cards.length ? cards : [cards]
 		if (toBottom) { cards.forEach(c => this._cards.push(c)) }
 		else { cards.forEach(c => this._cards.unshift(c)) }
 	}
 }
 
 class Deck extends Pile {
-	/**
-	 * 
-	 * @param {object[]} _cards 
+	/** 
 	 * @param {string[]} suits 
 	 * @param {string[]} royalty 
 	 * @param {number} numPerSuit 
 	 * @param {boolean} aceHigh 
 	 */
-	constructor(_cards,
-							suits = ['Club', 'Diamond', 'Heart', 'Spade'],
+	constructor(suits = ['Club', 'Diamond', 'Heart', 'Spade'],
 							royalty = ['Jack', 'King', 'Queen', 'Ace'],
 							numPerSuit = 13,
-							aceHigh = true) {
+							aceHigh = true,
+							_cards) {
 		super(_cards)
 		this._suits = suits
 		this._cards = (() => {
@@ -134,29 +134,39 @@ class Deck extends Pile {
 class Solitaire {
 	constructor() {
 		this.deck = new Deck()
-		this.foundation = this.deck.suits.reduce( (fndtion, suit) => {
+		this.foundation = this.deck.suits.reduce((fndtion, suit) => {
 			fndtion[suit] = new Pile()
 			return fndtion
 		}, {})
-		this.field = [new Pile(), new Pile(), new Pile(), new Pile(), new Pile(), new Pile(), new Pile() ]
+		this.field = [new Pile(), new Pile(), new Pile(), new Pile(), new Pile(), new Pile(), new Pile()]
+		this.discard = new Pile()
 	}
 
 	deal() {
-		this.deck.shuffle(6)
+		this.deck.shuffle(3)
+		// deal field
 		this.field.forEach( (pile, i) => {
-			[...Array(i+1).keys()].forEach( slot => pile.collect([this.deck.draw()]))
+			[...Array(i+1).keys()].forEach( slot => pile.collect(this.deck.draw()))
 			pile.cards[pile.length - 1].turn()
 		})
+		// draw cards
+		this.discard.collect(this.deck.draw())
+		this.discard.cards[this.discard.length - 1].turn()
 	}
 
-}
+	fieldCardToFoundation(fieldIndex, suit) {
+		let card = this.field[fieldIndex].peek()
+		if (card.suit === suit
+				&& this.foundation[suit].peek().value === card.value - 1) {
+					this.foundation[suit].collect(this.field.draw(), false)
+		}
+ 	}
 
+}
 
 const game = new Solitaire()
 
 game.deal()
 
-console.log(game.field[3])
-console.log(game.field[3].peek())
-console.log(game.field[3].peek(2))
+console.log(game.discard.cards[0])
 
